@@ -59,3 +59,48 @@ INSERT IGNORE INTO `order_ext` (
     '{"sp_rate":0.80,"platform_rate":0.20}',
     '{"price_rule_version":{"1":"v2026.11"},"station_type":2,"pick_up_distance":1100,"delivery_distance":22000,"cross_city_type":0}'
 );
+
+-- 为批量补充订单生成扩展数据（可重复执行）
+INSERT IGNORE INTO `order_ext` (
+    `order_no`, `bill_distance`, `bill_duration`, `end_after_order`,
+    `estimate_price_info`, `price_info`, `driver_price_info`, `split_info`, `extra_info`
+)
+SELECT
+    o.order_no,
+    8000 + (o.id % 20) * 1000,
+    600 + (o.id % 20) * 60,
+    CASE WHEN o.order_status IN (50, 39) THEN 1 ELSE 0 END,
+    JSON_OBJECT(
+        'total_price', o.total_price,
+        'start_price', 1300,
+        'mileage_price', 2000,
+        'duration_price', 800,
+        'bill_distance', 8000 + (o.id % 20) * 1000,
+        'bill_duration', 600 + (o.id % 20) * 60
+    ),
+    CASE WHEN o.order_status IN (50, 39, 10) THEN JSON_OBJECT(
+        'total_price', o.total_price,
+        'start_price', 1300,
+        'mileage_price', 2000,
+        'duration_price', 800,
+        'bill_distance', 8000 + (o.id % 20) * 1000,
+        'bill_duration', 600 + (o.id % 20) * 60
+    ) ELSE JSON_OBJECT() END,
+    CASE WHEN o.order_status IN (50, 39, 10) THEN JSON_OBJECT(
+        'total_price', o.driver_total_price,
+        'start_price', 1000,
+        'mileage_price', 1600,
+        'duration_price', 600
+    ) ELSE JSON_OBJECT() END,
+    JSON_OBJECT('sp_rate', 0.80, 'platform_rate', 0.20),
+    JSON_OBJECT(
+        'price_rule_version', JSON_OBJECT('1', 'v2026.11'),
+        'station_type', o.id % 3,
+        'pick_up_distance', 800 + (o.id % 10) * 100,
+        'delivery_distance', 8000 + (o.id % 20) * 1000,
+        'cross_city_type', 0
+    )
+FROM `order_info` o
+WHERE o.order_no LIKE 'WO20261107%'
+  AND o.status = 1
+  AND NOT EXISTS (SELECT 1 FROM `order_ext` e WHERE e.order_no = o.order_no);

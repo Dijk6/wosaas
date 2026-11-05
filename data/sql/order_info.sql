@@ -135,3 +135,62 @@ INSERT IGNORE INTO `order_info` (
     0, 0, 0, 0, 0, 0,
     UNIX_TIMESTAMP('2026-11-06 17:55:00'), UNIX_TIMESTAMP('2026-11-06 17:55:00')
 );
+
+-- 批量补充模拟订单：WO202611070006 ~ WO202611070025（可重复执行）
+INSERT IGNORE INTO `order_info` (
+    `order_no`, `channel_order_no`, `order_status`, `sp_id`, `cp_id`, `agent_id`, `fleet_id`,
+    `channel_partner_id`, `channel_user_id`, `mobile`, `create_mobile`,
+    `total_price`, `pay_price`, `channel_pay_price`, `driver_total_price`,
+    `start_place`, `start_address`, `start_city_id`,
+    `end_place`, `end_address`, `end_city_id`,
+    `start_geo`, `end_geo`,
+    `driver_client_version`, `driver_device`, `driver_cuid`, `driver_uid`, `driver_mobile`,
+    `vehicle_uid`, `vehicle_number`, `car_type`, `cancel_type`, `pre_pay`, `status`,
+    `start_time`, `confirm_time`, `pickup_time`, `arrive_time`, `receive_time`,
+    `delivery_time`, `bill_time`, `pay_time`, `create_time`, `update_time`
+)
+SELECT
+    CONCAT('WO20261107', LPAD(seq.n, 4, '0')),
+    CONCAT('CH20261107', LPAD(seq.n, 4, '0')),
+    CASE seq.n % 5 WHEN 0 THEN 50 WHEN 1 THEN 39 WHEN 2 THEN 10 WHEN 3 THEN 9 ELSE 0 END,
+    'SP001', 1001, 2001, 3001, 0, '',
+    CONCAT('1380000', LPAD(seq.n, 4, '0')),
+    CONCAT('1380000', LPAD(seq.n, 4, '0')),
+    1000 + seq.n * 120,
+    CASE WHEN seq.n % 5 IN (0, 2) THEN 1000 + seq.n * 120 ELSE 0 END,
+    0,
+    CASE WHEN seq.n % 5 IN (0, 1, 2) THEN 800 + seq.n * 100 ELSE 0 END,
+    ELT(1 + (seq.n % 5), '北京南站', '国贸地铁站', '上海虹桥站', '深圳北站', '杭州东站'),
+    ELT(1 + (seq.n % 5), '北京市丰台区永外大街车站路12号', '北京市朝阳区建国门外大街1号', '上海市闵行区申贵路1500号', '深圳市龙华区民治街道致远中路28号', '杭州市上城区全福桥路2号'),
+    ELT(1 + (seq.n % 5), 110100, 110100, 310100, 440300, 330100),
+    ELT(1 + (seq.n % 5), '首都机场T3航站楼', '望京SOHO', '浦东国际机场', '深圳湾口岸', '西湖风景区'),
+    ELT(1 + (seq.n % 5), '北京市顺义区机场东路', '北京市朝阳区望京街10号', '上海市浦东新区迎宾大道6000号', '深圳市南山区东滨路', '杭州市西湖区龙井路1号'),
+    ELT(1 + (seq.n % 5), 110100, 110100, 310100, 440300, 330100),
+    ELT(1 + (seq.n % 5), '116.378,39.865', '116.461,39.909', '121.320,31.194', '114.029,22.610', '120.213,30.291'),
+    ELT(1 + (seq.n % 5), '116.622,40.072', '116.481,39.996', '121.805,31.144', '113.945,22.505', '120.130,30.236'),
+    '6.3.0',
+    CASE WHEN seq.n % 2 = 0 THEN 1 ELSE 2 END,
+    CONCAT('cuid_demo_', LPAD(seq.n, 3, '0')),
+    CASE WHEN seq.n % 5 IN (0, 1, 2) THEN CONCAT('DRV20', LPAD(seq.n, 3, '0')) ELSE '' END,
+    CASE WHEN seq.n % 5 IN (0, 1, 2) THEN CONCAT('1390001', LPAD(seq.n, 4, '0')) ELSE '' END,
+    CASE WHEN seq.n % 5 IN (0, 1, 2) THEN CONCAT('VEH20', LPAD(seq.n, 3, '0')) ELSE '' END,
+    CASE WHEN seq.n % 5 IN (0, 1, 2) THEN CONCAT('京N', LPAD(seq.n, 5, '0')) ELSE '' END,
+    1 + (seq.n % 3),
+    CASE WHEN seq.n % 5 = 3 THEN 1 ELSE 0 END,
+    3, 1,
+    UNIX_TIMESTAMP('2026-11-07 08:00:00') + seq.n * 1800,
+    CASE WHEN seq.n % 5 IN (0, 1, 2) THEN UNIX_TIMESTAMP('2026-11-07 08:00:00') + seq.n * 1800 + 300 ELSE 0 END,
+    CASE WHEN seq.n % 5 IN (0, 1, 2) THEN UNIX_TIMESTAMP('2026-11-07 08:00:00') + seq.n * 1800 + 600 ELSE 0 END,
+    CASE WHEN seq.n % 5 IN (0, 1, 2) THEN UNIX_TIMESTAMP('2026-11-07 08:00:00') + seq.n * 1800 + 900 ELSE 0 END,
+    CASE WHEN seq.n % 5 IN (0, 1, 2) THEN UNIX_TIMESTAMP('2026-11-07 08:00:00') + seq.n * 1800 + 1200 ELSE 0 END,
+    CASE WHEN seq.n % 5 IN (0, 1) THEN UNIX_TIMESTAMP('2026-11-07 08:00:00') + seq.n * 1800 + 3600 ELSE 0 END,
+    CASE WHEN seq.n % 5 IN (0, 1) THEN UNIX_TIMESTAMP('2026-11-07 08:00:00') + seq.n * 1800 + 3700 ELSE 0 END,
+    CASE WHEN seq.n % 5 = 0 THEN UNIX_TIMESTAMP('2026-11-07 08:00:00') + seq.n * 1800 + 3800 ELSE 0 END,
+    UNIX_TIMESTAMP('2026-11-07 08:00:00') + seq.n * 1800,
+    UNIX_TIMESTAMP('2026-11-07 08:00:00') + seq.n * 1800 + 7200
+FROM (
+    SELECT 6 AS n UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10
+    UNION ALL SELECT 11 UNION ALL SELECT 12 UNION ALL SELECT 13 UNION ALL SELECT 14 UNION ALL SELECT 15
+    UNION ALL SELECT 16 UNION ALL SELECT 17 UNION ALL SELECT 18 UNION ALL SELECT 19 UNION ALL SELECT 20
+    UNION ALL SELECT 21 UNION ALL SELECT 22 UNION ALL SELECT 23 UNION ALL SELECT 24 UNION ALL SELECT 25
+) AS seq;
