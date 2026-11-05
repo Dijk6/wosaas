@@ -6,12 +6,17 @@ import (
 
 	"wosaas/servers/httpserver/controller/manage/example"
 	exporttaskctrl "wosaas/servers/httpserver/controller/manage/exporttask"
+	orderctrl "wosaas/servers/httpserver/controller/manage/order"
 )
 
 // RegisterManage 注册后台管理接口。
 func RegisterManage(r *gin.RouterGroup) {
 	r.GET("/example/hello", example.Hello)
 	r.POST("/example/hello", example.Hello)
+
+	// 订单管理
+	r.GET("/order/list", orderctrl.List)
+	r.POST("/order/export", orderctrl.Export)
 
 	// 导出任务
 	r.POST("/export/task/add", exporttaskctrl.Add)

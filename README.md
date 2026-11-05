@@ -169,6 +169,20 @@ mysql -uroot -p wosaas < data/sql/export_task.sql
 - 生产环境建议改为服务端生成 SQL，而不是直接接收外部 SQL
 - 后续可把 `library/filestore` 替换为 S3/OSS 等对象存储，并接入短链与过期清理
 
+## 订单管理与导出
+
+`wosaas` 提供订单列表和订单导出接口，后台页面位于同级项目 `wosoke`。
+
+```text
+GET  /manage/order/list
+POST /manage/order/export
+GET  /manage/export/task/list?src_page=order_list
+POST /manage/export/task/run
+GET  /manage/export/download/:date/:file
+```
+
+订单导出由服务端根据查询条件生成 SQL，复用 `export_task` 任务表和异步 worker，导出字段包括订单号、状态、乘客手机号、司机、车牌、起终点、金额和创建时间。
+
 ## 配置说明
 
 - `app.toml`：应用名、运行模式、端口。`From = "env"` 时优先读取 `Value` 指定的环境变量。
