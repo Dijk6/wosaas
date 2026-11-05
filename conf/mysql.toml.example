@@ -1,0 +1,10 @@
+# MySQL 配置模板。
+# 复制为 conf/mysql.toml 后填写本地密码；conf/mysql.toml 已加入 .gitignore。
+
+[[mysql]]
+name = "saas"
+dsn = "root:your_password@tcp(127.0.0.1:3306)/wosaas?charset=utf8mb4&parseTime=True&loc=Local"
+max_idle_conns = 10
+max_open_conns = 100
+conn_max_lifetime = 3600
+log_level = "info"

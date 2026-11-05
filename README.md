@@ -8,6 +8,8 @@
 
 ```bash
 cd wosaas
+cp conf/mysql.toml.example conf/mysql.toml
+# 编辑 conf/mysql.toml，把 your_password 换成本地 MySQL 密码
 go mod tidy
 go run . -conf ./conf/app.toml
 ```
@@ -155,6 +157,7 @@ curl -X POST http://127.0.0.1:8600/manage/export/task/run
 ### 建表
 
 ```bash
+mysql -uroot -p -e "CREATE DATABASE IF NOT EXISTS wosaas DEFAULT CHARACTER SET utf8mb4;"
 mysql -uroot -p wosaas < data/sql/export_task.sql
 ```
 
@@ -170,7 +173,7 @@ mysql -uroot -p wosaas < data/sql/export_task.sql
 
 - `app.toml`：应用名、运行模式、端口。`From = "env"` 时优先读取 `Value` 指定的环境变量。
 - `server.toml`：`{port.Main}`、`{port.Admin}` 会被解析为实际端口。
-- `mysql.toml`：支持多数据源，`name` 即 `resource.DB(name)` 的名称。
+- `mysql.toml`：本地 MySQL 配置，已加入 `.gitignore`，不会提交；模板为 `mysql.toml.example`。支持多数据源，`name` 即 `resource.DB(name)` 的名称。
 - `redis.toml`：Redis 连接参数。
 - `global.toml`：业务全局配置，由 `resource.GlobalConfig` 解析。
 
