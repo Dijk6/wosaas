@@ -1,0 +1,5 @@
+# 业务全局配置，由 resource.GlobalConfig 解析。
+
+[app_profiles.default]
+sp_id = "default"
+name = "默认应用"

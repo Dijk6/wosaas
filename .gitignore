@@ -1,0 +1,7 @@
+bin/
+*.log
+*.test
+.idea/
+.vscode/
+.DS_Store
+data/export/

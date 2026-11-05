@@ -1,0 +1,18 @@
+# 多数据源配置。
+# name 与 resource.RegisterDB 注册的名称对应，也对应 resource.DB(name)。
+
+[[mysql]]
+name = "saas"
+dsn = "root:root@tcp(127.0.0.1:3306)/wosaas?charset=utf8mb4&parseTime=True&loc=Local"
+max_idle_conns = 10
+max_open_conns = 100
+conn_max_lifetime = 3600
+log_level = "info"
+
+[[mysql]]
+name = "order"
+dsn = "root:root@tcp(127.0.0.1:3306)/wosaas_order?charset=utf8mb4&parseTime=True&loc=Local"
+max_idle_conns = 10
+max_open_conns = 100
+conn_max_lifetime = 3600
+log_level = "warn"

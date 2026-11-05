@@ -1,0 +1,30 @@
+# app.toml: 应用主配置文件
+
+[Base]
+# 应用名称
+AppName = "wosaas"
+
+# 运行模式: debug / test / release
+RunMode = "debug"
+
+# 逻辑 IDC
+IDC = "test"
+
+[Meta]
+# 端口定义。From = "env" 时优先读取环境变量，否则使用 DevDefault。
+[[Meta.Ports]]
+Name = "Main"
+DevDefault = 8600
+From = "env"
+Value = "LISTEN_PORT"
+
+[[Meta.Ports]]
+Name = "Admin"
+DevDefault = 8081
+From = "env"
+Value = "LISTEN_PORT_1"
+
+[[Meta.Links]]
+Name = "健康检查"
+URI = "/health"
+PortName = "Main"

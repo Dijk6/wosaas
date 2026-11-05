@@ -1,0 +1,13 @@
+# 当前应用所有 Server 的监听配置
+
+[HTTPServer]
+Listen = "0.0.0.0:{port.Main}"
+ReadTimeout = 3000   # ms
+WriteTimeout = 10000 # ms
+IdleTimeout = 3000   # ms
+
+[AdminServer]
+Listen = "0.0.0.0:{port.Admin}"
+ReadTimeout = 3000
+WriteTimeout = 10000
+IdleTimeout = 3000
